@@ -1,4 +1,5 @@
-﻿using Google.Protobuf;
+﻿using System.Collections.Immutable;
+using Google.Protobuf;
 using TerraformPluginDotNet.ResourceProvider;
 using TerraformPluginDotNet.Schemas.Types;
 using Tfplugin5;
@@ -17,39 +18,38 @@ public class XmlFileSchemaProvider : IDataSourceSchemaProvider
 
     public IEnumerable<DataSourceRegistration> GetSchemas()
     {
-        var adhoc1 = new
+        var replaceFragment = new Dictionary<string, TerraformType>
         {
-            Test = "A"
+            ["from"] = _terraformTypeBuilder.GetTerraformType(typeof(string)),
+            ["to"] = _terraformTypeBuilder.GetTerraformType(typeof(string)),
         };
-        var adhoc2 = new
+        var replaceFragmentType = new TerraformType.TfObject(replaceFragment.ToImmutableDictionary(), ImmutableHashSet<string>.Empty);
+
+        var setHeader = new Dictionary<string, TerraformType>
         {
-            Test = "A"
+            ["value"] = _terraformTypeBuilder.GetTerraformType(typeof(int))
         };
+        var setHeaderType = new TerraformType.TfObject(setHeader.ToImmutableDictionary(), ImmutableHashSet<string>.Empty);
 
-        var terraformObjectType1 = _terraformTypeBuilder.GetTerraformType(adhoc1.GetType());
-        var terraformObjectType2 = _terraformTypeBuilder.GetTerraformType(adhoc2.GetType());
-
-        var policy1 = GetBasePolicySchema();
-        policy1.Block.Attributes.Add(new Schema.Types.Attribute
+        var fragments = new Dictionary<string, TerraformType>
         {
-            Description = "The object containing all parameters for the xml file",
-            DescriptionKind = Tfplugin5.StringKind.Plain,
-            Name = "params",
-            Type = ByteString.CopyFromUtf8(terraformObjectType1.ToJson())
+            ["set_header"] = setHeaderType,
+            ["replace"] = replaceFragmentType
+        };
+        var fragmentsType = new TerraformType.TfObject(fragments.ToImmutableDictionary(), fragments.Keys.ToImmutableHashSet());
+
+        var policies = GetBasePolicySchema();
+
+        policies.Block.Attributes.Add(new Schema.Types.Attribute
+        {
+            Description = "Fragments to combine",
+            DescriptionKind = StringKind.Plain,
+            Name = "fragments",
+            Required = true,
+            Type = ByteString.CopyFromUtf8(fragmentsType.ToJson())
         });
 
-        yield return new DataSourceRegistration("xmlmerger_policy1", typeof(XmlPolicy), policy1);
-
-        var policy2 = GetBasePolicySchema();
-        policy1.Block.Attributes.Add(new Schema.Types.Attribute
-        {
-            Description = "The object containing all parameters for the xml file",
-            DescriptionKind = Tfplugin5.StringKind.Plain,
-            Name = "params",
-            Type = ByteString.CopyFromUtf8(terraformObjectType2.ToJson())
-        });
-
-        yield return new DataSourceRegistration("xmlmerger_policy2", typeof(XmlPolicy), policy2);
+        yield return new DataSourceRegistration("xmlmerger_policy", typeof(XmlPolicy), policies);
     }
 
     private Schema GetBasePolicySchema()
@@ -67,12 +67,21 @@ public class XmlFileSchemaProvider : IDataSourceSchemaProvider
                     {
                         Computed = true,
                         Description = $"The name of the policy file - updated at {DateTime.UtcNow:s}",
-                        DescriptionKind = Tfplugin5.StringKind.Plain,
+                        DescriptionKind = StringKind.Plain,
                         Name = "policy_name",
+                        Type = ByteString.CopyFromUtf8(terraformStringType.ToJson())
+                    },
+                    new Schema.Types.Attribute
+                    {
+                        Computed = true,
+                        Description = "Raw xml output",
+                        DescriptionKind = StringKind.Plain,
+                        Name = "xml",
                         Type = ByteString.CopyFromUtf8(terraformStringType.ToJson())
                     }
                 }
             }
         };
     }
+
 }

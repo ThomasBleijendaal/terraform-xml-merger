@@ -1,4 +1,5 @@
-﻿using TerraformPluginDotNet.ResourceProvider;
+﻿using System.Text.Json;
+using TerraformPluginDotNet.ResourceProvider;
 
 namespace XmlMergerTerraformProvider;
 
@@ -11,6 +12,13 @@ public class XmlPolicyDataSourceProvider : IDataSourceProvider<XmlPolicy>
 
     public Task<XmlPolicy> ReadAsync(XmlPolicy request)
     {
-        return Task.FromResult(new XmlPolicy { PolicyName = "Abc" });
+        var output = new XmlPolicy
+        {
+            PolicyName = "Abc",
+            Fragments = request.Fragments,
+            Xml = JsonSerializer.Serialize(request.Fragments)
+        };
+
+        return Task.FromResult(output);
     }
 }
