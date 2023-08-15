@@ -1,0 +1,14 @@
+{
+  "profiles": {
+    "XmlMergerTerraformProvider": {
+      "commandName": "Project",
+      "commandLineArgs": "--DebugMode=true",
+      "launchBrowser": true,
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      },
+      "dotnetRunMessages": true,
+      "applicationUrl": "https://localhost:51027;http://localhost:51028"
+    }
+  }
+}

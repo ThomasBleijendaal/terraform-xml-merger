@@ -1,0 +1,7 @@
+<policies>
+    <inbound>
+        <set-header name="X-Date" exists-action="override">
+            <value>@{ return DateTime.UtcNow.ToString("o"); }</value>
+        </set-header>
+    </inbound>
+</policies>
