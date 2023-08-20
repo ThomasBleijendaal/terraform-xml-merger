@@ -4,7 +4,7 @@ using Moq;
 
 namespace XmlXdt.RequirementTests;
 
-public class Tests
+public class XdtTests
 {
     [Test]
     public void Insert()
@@ -59,7 +59,7 @@ public class Tests
                     <choose>
                         <when case="100"></when>
                     </choose>
-                    <choose>
+                    <choose id="auth">
                         <when case="1"></when>
                     </choose>
                 </inbound>
@@ -72,11 +72,7 @@ public class Tests
         var transformationXml = """
             <?xml version="1.0"?>
             <policies xmlns:xdt="http://schemas.microsoft.com/XML-Document-Transform">
-                <inbound>
-                    <choose>
-                        <when case="2" xdt:Transform="Insert" xdt:Locator="XPath(/policies/inbound/choose[2])"></when>
-                    </choose>
-                </inbound>
+                <when case="2" xdt:Transform="Insert" xdt:Locator="XPath(/policies/inbound/choose[@id='auth'])"></when>
             </policies>
             """;
 
@@ -96,7 +92,7 @@ public class Tests
                     <choose>
                         <when case="100"></when>
                     </choose>
-                    <choose>
+                    <choose id="auth">
                         <when case="1"></when>
                         <when case="2"></when>
                     </choose>

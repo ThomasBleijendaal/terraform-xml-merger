@@ -6,8 +6,10 @@
 **/terraform.tfstate
 **/terraform.tfstate.backup
 **/main.tf
+**/main.bicep
 **/*.ps1
 **/log.txt
+**/launchSettings.json
 
 # User-specific files
 *.suo
@@ -269,9 +271,3 @@ paket-files/
 # Python Tools for Visual Studio (PTVS)
 __pycache__/
 *.pyc
-
-local.appsettings.json
-*.pubxml
-src/*.Functions/Properties
-apim/apimtool
-apim/armtool

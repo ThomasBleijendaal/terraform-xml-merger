@@ -8,14 +8,12 @@ namespace XmlMergerTerraformProvider;
 
 [SchemaVersion(1)]
 [MessagePackObject]
-public class XmlPolicy
+public record XmlPolicy
 {
-    [Key("policy_name")]
-    [JsonPropertyName("policy_name")]
-    [Description("Name of the policy file")]
-    [Computed]
-    [MessagePackFormatter(typeof(ComputedStringValueFormatter))]
-    public string? PolicyName { get; set; }
+    [Key("base_xml")]
+    [JsonPropertyName("base_xml")]
+    [Description("Base xml to merge all fragments into")]
+    public string? BaseXml { get; set; }
 
     [Key("fragments")]
     [JsonPropertyName("fragments")]

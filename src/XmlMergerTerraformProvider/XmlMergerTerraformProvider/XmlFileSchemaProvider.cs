@@ -8,51 +8,46 @@ namespace XmlMergerTerraformProvider;
 
 public class XmlFileSchemaProvider : IDataSourceSchemaProvider
 {
+    private readonly PluginConfigurator _config;
     private readonly ITerraformTypeBuilder _terraformTypeBuilder;
 
     public XmlFileSchemaProvider(
+        PluginConfigurator config,
         ITerraformTypeBuilder terraformTypeBuilder)
     {
+        _config = config;
         _terraformTypeBuilder = terraformTypeBuilder;
     }
 
     public IEnumerable<DataSourceRegistration> GetSchemas()
     {
-        var replaceFragment = new Dictionary<string, TerraformType>
-        {
-            ["from"] = _terraformTypeBuilder.GetTerraformType(typeof(string)),
-            ["to"] = _terraformTypeBuilder.GetTerraformType(typeof(string)),
-        };
-        var replaceFragmentType = new TerraformType.TfObject(replaceFragment.ToImmutableDictionary(), ImmutableHashSet<string>.Empty);
+        var policyFiles = Directory.GetFiles(_config.Config.PolicyFolder, "*.xml");
 
-        var setHeader = new Dictionary<string, TerraformType>
-        {
-            ["value"] = _terraformTypeBuilder.GetTerraformType(typeof(int))
-        };
-        var setHeaderType = new TerraformType.TfObject(setHeader.ToImmutableDictionary(), ImmutableHashSet<string>.Empty);
+        var fragments = new Dictionary<string, TerraformType>();
 
-        var fragments = new Dictionary<string, TerraformType>
+        foreach (var policyFile in policyFiles)
         {
-            ["set_header"] = setHeaderType,
-            ["replace"] = replaceFragmentType
-        };
+            try
+            {
+                var fragment = XmlFileHelper.ResolveParametersFromXmlFile(policyFile)
+                    .ToImmutableDictionary(x => x.Key, x => _terraformTypeBuilder.GetTerraformType(x.Value));
+
+                var fragmentType = new TerraformType.TfObject(fragment, ImmutableHashSet<string>.Empty);
+
+                fragments.Add(Path.GetFileName(policyFile).Replace(".xml", ""), fragmentType);
+            }
+            catch (Exception)
+            {
+                // nope
+            }
+        }
+
         var fragmentsType = new TerraformType.TfObject(fragments.ToImmutableDictionary(), fragments.Keys.ToImmutableHashSet());
 
-        var policies = GetBasePolicySchema();
-
-        policies.Block.Attributes.Add(new Schema.Types.Attribute
-        {
-            Description = "Fragments to combine",
-            DescriptionKind = StringKind.Plain,
-            Name = "fragments",
-            Required = true,
-            Type = ByteString.CopyFromUtf8(fragmentsType.ToJson())
-        });
-
-        yield return new DataSourceRegistration("xmlmerger_policy", typeof(XmlPolicy), policies);
+        yield return new DataSourceRegistration("xmlmerger_policy", typeof(XmlPolicy), GetPolicySchema(fragmentsType));
     }
 
-    private Schema GetBasePolicySchema()
+    private Schema GetPolicySchema(TerraformType fragmentsType)
     {
         var terraformStringType = _terraformTypeBuilder.GetTerraformType(typeof(string));
 
@@ -65,11 +60,19 @@ public class XmlFileSchemaProvider : IDataSourceSchemaProvider
                 {
                     new Schema.Types.Attribute
                     {
-                        Computed = true,
-                        Description = $"The name of the policy file - updated at {DateTime.UtcNow:s}",
+                        Description = "Base xml to merge all fragments into",
                         DescriptionKind = StringKind.Plain,
-                        Name = "policy_name",
+                        Name = "base_xml",
+                        Optional = true,
                         Type = ByteString.CopyFromUtf8(terraformStringType.ToJson())
+                    },
+                    new Schema.Types.Attribute
+                    {
+                        Description = "Fragments to combine",
+                        DescriptionKind = StringKind.Plain,
+                        Name = "fragments",
+                        Required = true,
+                        Type = ByteString.CopyFromUtf8(fragmentsType.ToJson())
                     },
                     new Schema.Types.Attribute
                     {
@@ -83,5 +86,4 @@ public class XmlFileSchemaProvider : IDataSourceSchemaProvider
             }
         };
     }
-
 }
