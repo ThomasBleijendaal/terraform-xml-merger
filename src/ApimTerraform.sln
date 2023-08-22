@@ -11,7 +11,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TerraformPluginDotNet.Testi
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "XmlMergerTerraformProvider.Tests", "XmlMergerTerraformProvider.Tests\XmlMergerTerraformProvider.Tests.csproj", "{23867AC2-7FF2-4031-906E-C932315A11DF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XmlXdt.RequirementTests", "XmlXdt.RequirementTests\XmlXdt.RequirementTests.csproj", "{B63D50C4-D177-4B37-AF47-64C67100CEB2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "XmlXdt.RequirementTests", "XmlXdt.RequirementTests\XmlXdt.RequirementTests.csproj", "{B63D50C4-D177-4B37-AF47-64C67100CEB2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenApiMerger", "OpenApiMerger\OpenApiMerger.csproj", "{5AD31691-56F5-4322-B4CA-E7FB7134A162}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -39,6 +41,10 @@ Global
 		{B63D50C4-D177-4B37-AF47-64C67100CEB2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B63D50C4-D177-4B37-AF47-64C67100CEB2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B63D50C4-D177-4B37-AF47-64C67100CEB2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5AD31691-56F5-4322-B4CA-E7FB7134A162}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5AD31691-56F5-4322-B4CA-E7FB7134A162}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5AD31691-56F5-4322-B4CA-E7FB7134A162}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5AD31691-56F5-4322-B4CA-E7FB7134A162}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
