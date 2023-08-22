@@ -23,11 +23,9 @@ app.Map("/json", async ([FromQuery] string[] url, [FromServices] HttpClient http
 
     var documents = await Task.WhenAll(urls.Select(async uri =>
     {
-        var jsonStream = await httpClient.GetStreamAsync(uri.ToString(), cancellationToken);
+        using var jsonStream = await httpClient.GetStreamAsync(uri.ToString(), cancellationToken);
 
         var reader = new OpenApiStreamReader();
-
-        // Act
         var schema = reader.Read(jsonStream, out var diagnostic);
 
         return schema;
