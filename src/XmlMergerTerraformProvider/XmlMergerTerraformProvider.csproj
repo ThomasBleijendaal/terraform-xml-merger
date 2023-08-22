@@ -7,7 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\..\TerraformPluginDotNet\TerraformPluginDotNet\TerraformPluginDotNet.csproj" />
+    <ProjectReference Include="..\..\..\TerraformPluginDotNet\TerraformPluginDotNet\TerraformPluginDotNet.csproj" />
     <PackageReference Include="Microsoft.Web.Xdt" Version="3.1.0" />
     <PackageReference Include="Serilog.Sinks.Seq" Version="5.0.0" />
   </ItemGroup>

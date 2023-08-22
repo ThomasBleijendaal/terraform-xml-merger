@@ -5,9 +5,9 @@ VisualStudioVersion = 17.4.33403.182
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "XmlMergerTerraformProvider", "XmlMergerTerraformProvider\XmlMergerTerraformProvider.csproj", "{5CFCFAAD-21F6-4BC1-ADEC-AF4231883F8D}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TerraformPluginDotNet", "..\..\..\TerraformPluginDotNet\TerraformPluginDotNet\TerraformPluginDotNet.csproj", "{51FE0FE8-A6E6-4971-A22F-AD6C536FF913}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TerraformPluginDotNet", "..\..\TerraformPluginDotNet\TerraformPluginDotNet\TerraformPluginDotNet.csproj", "{51FE0FE8-A6E6-4971-A22F-AD6C536FF913}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TerraformPluginDotNet.Testing", "..\..\..\TerraformPluginDotNet\TerraformPluginDotNet.Testing\TerraformPluginDotNet.Testing.csproj", "{6D1DF1B9-ED6E-4BDF-9018-A574A45D3DAE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TerraformPluginDotNet.Testing", "..\..\TerraformPluginDotNet\TerraformPluginDotNet.Testing\TerraformPluginDotNet.Testing.csproj", "{6D1DF1B9-ED6E-4BDF-9018-A574A45D3DAE}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "XmlMergerTerraformProvider.Tests", "XmlMergerTerraformProvider.Tests\XmlMergerTerraformProvider.Tests.csproj", "{23867AC2-7FF2-4031-906E-C932315A11DF}"
 EndProject
