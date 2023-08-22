@@ -15,10 +15,6 @@ await TerraformPluginHost.RunAsync(args, "thomas-ict.nl/azure/xmlmerger", (servi
  * 
  * - remove serilog json file requirement
  * - document TF_XML_POLICIES_FOLDER + TF_XML_BASE_POLICY
- * 
- * xml todos
- * 
- * - support for "placement = top"
- * - support for merging into specific parent element (all whens into a choose)
+ * - add swagger merger
  * 
 */

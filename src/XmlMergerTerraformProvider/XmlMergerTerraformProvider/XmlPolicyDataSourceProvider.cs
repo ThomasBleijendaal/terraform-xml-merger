@@ -33,9 +33,14 @@ public class XmlPolicyDataSourceProvider : IDataSourceProvider<XmlPolicy>
                 basePolicyXml.Load(config.BasePolicy);
             }
         }
-        catch
+        catch (Exception ex)
         {
-            // nope
+            context.AddDiagnostic(new Diagnostic
+            {
+                Severity = Diagnostic.Types.Severity.Error,
+                Summary = "Failed to load base policy xml",
+                Detail = $"Tried to load\r\n\r\n{request.BaseXml ?? config.BasePolicy}\r\n\r\n{ex.Message}\r\n{ex.StackTrace}"
+            });
         }
 
         foreach (var fragment in request.Fragments.Where(x => x.Value != null))

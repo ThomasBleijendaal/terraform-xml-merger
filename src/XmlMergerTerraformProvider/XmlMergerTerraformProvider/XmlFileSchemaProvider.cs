@@ -9,13 +9,16 @@ namespace XmlMergerTerraformProvider;
 public class XmlFileSchemaProvider : IDataSourceSchemaProvider
 {
     private readonly PluginConfigurator _config;
+    private readonly ILogger<XmlFileSchemaProvider> _logger;
     private readonly ITerraformTypeBuilder _terraformTypeBuilder;
 
     public XmlFileSchemaProvider(
         PluginConfigurator config,
+        ILogger<XmlFileSchemaProvider> logger,
         ITerraformTypeBuilder terraformTypeBuilder)
     {
         _config = config;
+        _logger = logger;
         _terraformTypeBuilder = terraformTypeBuilder;
     }
 
@@ -36,9 +39,9 @@ public class XmlFileSchemaProvider : IDataSourceSchemaProvider
 
                 fragments.Add(Path.GetFileName(policyFile).Replace(".xml", ""), fragmentType);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                // nope
+                _logger.LogError(ex, "Failed to load {policyFile}", policyFile);
             }
         }
 
