@@ -47,12 +47,14 @@ public class XmlFileSchemaProvider : IDataSourceSchemaProvider
 
         var fragmentsType = new TerraformType.TfObject(fragments.ToImmutableDictionary(), fragments.Keys.ToImmutableHashSet());
 
-        yield return new DataSourceRegistration("xmlmerger_policy", typeof(XmlPolicy), GetPolicySchema(fragmentsType));
+        yield return new DataSourceRegistration("xmlmerger_policy", typeof(XmlPolicyDataResource), GetPolicySchema(fragmentsType));
     }
 
     private Schema GetPolicySchema(TerraformType fragmentsType)
     {
         var terraformStringType = _terraformTypeBuilder.GetTerraformType(typeof(string));
+
+        // TODO: use schema builder to build the base
 
         return new Schema
         {

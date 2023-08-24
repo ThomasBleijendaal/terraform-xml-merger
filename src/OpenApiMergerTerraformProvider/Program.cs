@@ -1,8 +1,8 @@
 ﻿using Core;
+using OpenApiMergerTerraformProvider;
 using Serilog;
 using TerraformPluginDotNet;
 using TerraformPluginDotNet.ResourceProvider;
-using XmlMergerTerraformProvider;
 
 try
 {
@@ -10,13 +10,14 @@ try
         .ReadFrom.Configuration(new ConfigurationBuilder().AddSeqConfiguration().Build())
         .CreateBootstrapLogger();
 
-    await TerraformPluginHost.CreateHostBuilder(args, "thomas-ict.nl/azure/xmlmerger")
+    await TerraformPluginHost.CreateHostBuilder(args, "thomas-ict.nl/azure/openapimerger")
         .ConfigureResourceRegistry((services, registry) =>
         {
+            services.AddHttpClient();
             services.AddSingleton<PluginConfigurator>();
             services.AddTerraformProviderConfigurator<PluginConfiguration, PluginConfigurator>();
-            services.AddTransient<IDataSourceProvider<XmlPolicyDataResource>, XmlPolicyDataSourceProvider>();
-            services.AddTransient<IDataSourceSchemaProvider, XmlFileSchemaProvider>();
+            services.AddTransient<IDataSourceProvider<OpenApiDataResource>, OpenApiDataSourceProvider>();
+            services.AddTransient<IDataSourceSchemaProvider, OpenApiSchemaProvider>();
         })
         .ConfigureAppConfiguration(builder =>
         {

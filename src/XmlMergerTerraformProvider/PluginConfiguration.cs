@@ -5,6 +5,8 @@ using TerraformPluginDotNet.Resources;
 
 namespace XmlMergerTerraformProvider;
 
+// TODO: this does not really work - schema is requested too early compared to configuring this
+
 [SchemaVersion(1)]
 [MessagePackObject]
 public class PluginConfiguration

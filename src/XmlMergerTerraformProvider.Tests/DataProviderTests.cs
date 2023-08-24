@@ -26,7 +26,7 @@ public class DataProviderTests
 
     private void Configure(IServiceCollection services, IResourceRegistryContext registryContext)
     {
-        services.AddSingleton<IDataSourceProvider<XmlPolicy>, XmlPolicyDataSourceProvider>();
+        services.AddSingleton<IDataSourceProvider<XmlPolicyDataResource>, XmlPolicyDataSourceProvider>();
         services.AddSingleton<IDataSourceSchemaProvider, XmlFileSchemaProvider>();
     }
 

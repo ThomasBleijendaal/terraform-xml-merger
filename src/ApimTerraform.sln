@@ -13,7 +13,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "XmlMergerTerraformProvider.
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "XmlXdt.RequirementTests", "XmlXdt.RequirementTests\XmlXdt.RequirementTests.csproj", "{B63D50C4-D177-4B37-AF47-64C67100CEB2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenApiMerger", "OpenApiMerger\OpenApiMerger.csproj", "{5AD31691-56F5-4322-B4CA-E7FB7134A162}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenApiMerger", "OpenApiMerger\OpenApiMerger.csproj", "{5AD31691-56F5-4322-B4CA-E7FB7134A162}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Core", "Core\Core.csproj", "{263DC439-2D5B-4A40-BAB4-D8E9EA3B7FD5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenApiMergerTerraformProvider", "OpenApiMergerTerraformProvider\OpenApiMergerTerraformProvider.csproj", "{04A27AC4-A886-4FDB-A126-9084ACAC1CA7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -45,6 +49,14 @@ Global
 		{5AD31691-56F5-4322-B4CA-E7FB7134A162}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5AD31691-56F5-4322-B4CA-E7FB7134A162}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5AD31691-56F5-4322-B4CA-E7FB7134A162}.Release|Any CPU.Build.0 = Release|Any CPU
+		{263DC439-2D5B-4A40-BAB4-D8E9EA3B7FD5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{263DC439-2D5B-4A40-BAB4-D8E9EA3B7FD5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{263DC439-2D5B-4A40-BAB4-D8E9EA3B7FD5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{263DC439-2D5B-4A40-BAB4-D8E9EA3B7FD5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{04A27AC4-A886-4FDB-A126-9084ACAC1CA7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{04A27AC4-A886-4FDB-A126-9084ACAC1CA7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{04A27AC4-A886-4FDB-A126-9084ACAC1CA7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{04A27AC4-A886-4FDB-A126-9084ACAC1CA7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

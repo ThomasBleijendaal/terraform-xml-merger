@@ -5,7 +5,7 @@ using Tfplugin5;
 
 namespace XmlMergerTerraformProvider;
 
-public class XmlPolicyDataSourceProvider : IDataSourceProvider<XmlPolicy>
+public class XmlPolicyDataSourceProvider : IDataSourceProvider<XmlPolicyDataResource>
 {
     private readonly PluginConfigurator _config;
 
@@ -15,9 +15,9 @@ public class XmlPolicyDataSourceProvider : IDataSourceProvider<XmlPolicy>
         _config = config;
     }
 
-    public Task<XmlPolicy> ReadAsync(XmlPolicy request) => throw new NotSupportedException();
+    public Task<XmlPolicyDataResource> ReadAsync(XmlPolicyDataResource request) => throw new NotSupportedException();
 
-    public Task<XmlPolicy> ReadAsync(XmlPolicy request, TerraformContext context)
+    public Task<XmlPolicyDataResource> ReadAsync(XmlPolicyDataResource request, TerraformContext context)
     {
         var config = _config.Config;
 

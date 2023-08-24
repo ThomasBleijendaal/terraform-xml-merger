@@ -8,7 +8,7 @@ namespace XmlMergerTerraformProvider;
 
 [SchemaVersion(1)]
 [MessagePackObject]
-public record XmlPolicy
+public record XmlPolicyDataResource
 {
     [Key("base_xml")]
     [JsonPropertyName("base_xml")]
