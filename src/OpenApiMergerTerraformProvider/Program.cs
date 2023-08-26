@@ -17,7 +17,7 @@ try
             services.AddSingleton<PluginConfigurator>();
             services.AddTerraformProviderConfigurator<PluginConfiguration, PluginConfigurator>();
             services.AddTransient<IDataSourceProvider<OpenApiDataResource>, OpenApiDataSourceProvider>();
-            services.AddTransient<IDataSourceSchemaProvider, OpenApiSchemaProvider>();
+            registry.RegisterDataSource<OpenApiDataResource>("openapimerger");
         })
         .ConfigureAppConfiguration(builder =>
         {

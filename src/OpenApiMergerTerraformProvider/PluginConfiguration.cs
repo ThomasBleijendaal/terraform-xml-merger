@@ -1,4 +1,6 @@
-﻿using MessagePack;
+﻿using System.ComponentModel;
+using System.Text.Json.Serialization;
+using MessagePack;
 using TerraformPluginDotNet.Resources;
 
 namespace OpenApiMergerTerraformProvider;
@@ -7,5 +9,9 @@ namespace OpenApiMergerTerraformProvider;
 [MessagePackObject]
 public class PluginConfiguration
 {
-
+    [Key("function_app_root_folder")]
+    [JsonPropertyName("function_app_root_folder")]
+    [Description("Root folder of function apps")]
+    [Required]
+    public string RootFolder { get; set; } = null!;
 }
