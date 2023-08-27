@@ -18,7 +18,7 @@ try
             services.AddTerraformProviderConfigurator<PluginConfiguration, PluginConfigurator>();
             services.AddTransient<IDataSourceProvider<OpenApiDataResource>, OpenApiDataSourceProvider>();
             registry.RegisterDataSource<OpenApiDataResource>("openapimerger");
-        })
+        }, 5344)
         .ConfigureAppConfiguration(builder =>
         {
             builder.AddSeqConfiguration();

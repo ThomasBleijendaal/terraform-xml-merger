@@ -18,11 +18,7 @@ without relying on policy fragments.
 
 Variables will be parsed and added to terraform schema.
 
-## Swagger Merger
+## OpenApi Merger
 
-Merges multiple swagger json files into single files, so API Management api version sets
+Merges multiple OpenApi json files into single files, so API Management api version sets
 can be composed of multiple backends.
-
-### Request format
-
-```/json?url=http://absolute-swagger.url/1&url=http://absolute-swagger.url/2```

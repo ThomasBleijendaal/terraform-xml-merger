@@ -1,14 +1,15 @@
-﻿using Microsoft.OpenApi.Interfaces;
+﻿using System.Collections.Specialized;
+using Microsoft.OpenApi.Interfaces;
 
 namespace OpenApiMergerTerraformProvider.Extensions;
 
-public static class OpenApiDocumentExtensions
+public static class EnumerableExtensions
 {
-    public static void AddRange<T>(this IList<T> list, IEnumerable<T> items)
+    public static void AddRange(this StringDictionary dict, IEnumerable<KeyValuePair<string, string>> items)
     {
         foreach (var item in items)
         {
-            list.Add(item);
+            dict.Add(item.Key, item.Value);
         }
     }
 

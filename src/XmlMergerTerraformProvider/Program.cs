@@ -17,7 +17,7 @@ try
             services.AddTerraformProviderConfigurator<PluginConfiguration, PluginConfigurator>();
             services.AddTransient<IDataSourceProvider<XmlPolicyDataResource>, XmlPolicyDataSourceProvider>();
             services.AddTransient<IDataSourceSchemaProvider, XmlFileSchemaProvider>();
-        })
+        }, 5345)
         .ConfigureAppConfiguration(builder =>
         {
             builder.AddSeqConfiguration();

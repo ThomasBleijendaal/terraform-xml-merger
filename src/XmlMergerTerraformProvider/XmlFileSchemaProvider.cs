@@ -1,6 +1,7 @@
 ﻿using System.Collections.Immutable;
 using Google.Protobuf;
 using TerraformPluginDotNet.ResourceProvider;
+using TerraformPluginDotNet.Schemas;
 using TerraformPluginDotNet.Schemas.Types;
 using Tfplugin5;
 
@@ -11,15 +12,18 @@ public class XmlFileSchemaProvider : IDataSourceSchemaProvider
     private readonly PluginConfigurator _config;
     private readonly ILogger<XmlFileSchemaProvider> _logger;
     private readonly ITerraformTypeBuilder _terraformTypeBuilder;
+    private readonly ISchemaBuilder _schemaBuilder;
 
     public XmlFileSchemaProvider(
         PluginConfigurator config,
         ILogger<XmlFileSchemaProvider> logger,
-        ITerraformTypeBuilder terraformTypeBuilder)
+        ITerraformTypeBuilder terraformTypeBuilder,
+        ISchemaBuilder schemaBuilder)
     {
         _config = config;
         _logger = logger;
         _terraformTypeBuilder = terraformTypeBuilder;
+        _schemaBuilder = schemaBuilder;
     }
 
     public IEnumerable<DataSourceRegistration> GetSchemas()
@@ -30,6 +34,8 @@ public class XmlFileSchemaProvider : IDataSourceSchemaProvider
 
         foreach (var policyFile in policyFiles)
         {
+            _logger.LogInformation("Analyzing {policyFile}", policyFile);
+
             try
             {
                 var fragment = XmlFileHelper.ResolveParametersFromXmlFile(policyFile)
@@ -52,43 +58,10 @@ public class XmlFileSchemaProvider : IDataSourceSchemaProvider
 
     private Schema GetPolicySchema(TerraformType fragmentsType)
     {
-        var terraformStringType = _terraformTypeBuilder.GetTerraformType(typeof(string));
+        var schema = _schemaBuilder.BuildSchema(typeof(XmlPolicyDataResource));
 
-        // TODO: use schema builder to build the base
+        schema.Block.Attributes.First(x => x.Name == "fragments").Type = ByteString.CopyFromUtf8(fragmentsType.ToJson());
 
-        return new Schema
-        {
-            Version = 1,
-            Block = new Schema.Types.Block
-            {
-                Attributes =
-                {
-                    new Schema.Types.Attribute
-                    {
-                        Description = "Base xml to merge all fragments into",
-                        DescriptionKind = StringKind.Plain,
-                        Name = "base_xml",
-                        Optional = true,
-                        Type = ByteString.CopyFromUtf8(terraformStringType.ToJson())
-                    },
-                    new Schema.Types.Attribute
-                    {
-                        Description = "Fragments to combine",
-                        DescriptionKind = StringKind.Plain,
-                        Name = "fragments",
-                        Required = true,
-                        Type = ByteString.CopyFromUtf8(fragmentsType.ToJson())
-                    },
-                    new Schema.Types.Attribute
-                    {
-                        Computed = true,
-                        Description = "Raw xml output",
-                        DescriptionKind = StringKind.Plain,
-                        Name = "xml",
-                        Type = ByteString.CopyFromUtf8(terraformStringType.ToJson())
-                    }
-                }
-            }
-        };
+        return schema;
     }
 }

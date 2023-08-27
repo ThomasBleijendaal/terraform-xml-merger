@@ -12,8 +12,12 @@ public record OpenApiDataResource
     [Key("open_api_urls")]
     [JsonPropertyName("open_api_urls")]
     [Description("OpenApi URLs")]
-    [Required]
-    public List<string> OpenApiUrls { get; set; } = new();
+    public List<string>? OpenApiUrls { get; set; }
+
+    [Key("open_api_files")]
+    [JsonPropertyName("open_api_files")]
+    [Description("OpenApi Files")]
+    public List<string>? OpenApiFiles { get; set; }
 
     [Key("function_apps")]
     [JsonPropertyName("function_apps")]
@@ -54,5 +58,10 @@ public record OpenApiDataResource
         [Description("OpenApi URL")]
         [Required]
         public string OpenApiUrl { get; set; } = null!;
+
+        [Key("function_app_env")]
+        [JsonPropertyName("function_app_env")]
+        [Description("Additional environment variables for function app")]
+        public Dictionary<string, string>? EnvVariables { get; set; }
     }
 }
