@@ -2,6 +2,7 @@
 using System.Text.Json.Serialization;
 using MessagePack;
 using TerraformPluginDotNet.Resources;
+using TerraformPluginDotNet.Serialization;
 
 namespace OpenApiMergerTerraformProvider;
 
@@ -41,6 +42,7 @@ public record OpenApiDataResource
     [JsonPropertyName("open_api_json")]
     [Description("OpenApi JSON")]
     [Computed]
+    [MessagePackFormatter(typeof(ComputedStringValueFormatter))]
     public string OpenApiJson { get; set; } = null!;
 
     [SchemaVersion(1)]

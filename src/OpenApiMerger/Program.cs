@@ -10,12 +10,6 @@ builder.Services.AddHttpClient();
 
 var app = builder.Build();
 
-/* TODO
- * - make possible to merge sequentially by starting function apps
- * - convert into read provider because the link must be publicly available
- * 
- */
-
 app.Map("/json", async ([FromQuery] string[] url, [FromServices] HttpClient httpClient, CancellationToken cancellationToken) =>
 {
     var urls = url.Select(url => Uri.TryCreate(url, UriKind.Absolute, out var uri) ? uri : null).OfType<Uri>().ToArray();

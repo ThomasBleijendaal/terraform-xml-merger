@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<policies xmlns:xdt="http://schemas.microsoft.com/XML-Document-Transform">
+    <inbound>
+        <set-header name="x-functions-key" exists-action="override" xdt:Transform="Insert">
+            <value>{{%FUNCTION_APP:string%FunctionAppKey}}</value>
+        </set-header>
+    </inbound>
+</policies>

@@ -7,6 +7,7 @@ namespace XmlMergerTerraformProvider;
 public static partial class XmlFileHelper
 {
     private static readonly Regex ParamRegex = CreateParamRegex();
+    private static readonly Regex NamedValueRegex = CreateNamedValueRegex();
 
     public static IEnumerable<KeyValuePair<string, Type>> ResolveParametersFromXmlFile(string policyFile)
     {
@@ -68,6 +69,18 @@ public static partial class XmlFileHelper
         return sb.ToString();
     }
 
+    public static List<string> ResolveNamedValuesFromXmlFile(string policyFile)
+    {
+        return NamedValueRegex
+            .Matches(policyFile)
+            .Select(x => x.Groups.Values.Skip(1).FirstOrDefault()?.Value)
+            .OfType<string>()
+            .ToList();
+    }
+
     [GeneratedRegex("%([A-Z_]+):([a-z]+)%")]
     private static partial Regex CreateParamRegex();
+
+    [GeneratedRegex(@"{{([A-Za-z0-9\.\-_]+)}}")]
+    private static partial Regex CreateNamedValueRegex();
 }

@@ -43,42 +43,50 @@ public class XmlPolicyDataSourceProvider : IDataSourceProvider<XmlPolicyDataReso
             });
         }
 
-        foreach (var fragment in request.Fragments.Where(x => x.Value != null))
+        foreach (var fragmentSet in request.Fragments)
         {
-            var xmlFileName = Path.Combine(config.PolicyFolder, $"{fragment.Key}.xml");
-
-            var xml = XmlFileHelper.ApplyParametersToXmlFile(
-                File.ReadAllText(xmlFileName),
-                fragment.Value);
-
-            var transformFragment = new XmlTransformation(xml, false, null);
-
-            try
+            foreach (var fragment in fragmentSet.Where(x => x.Value != null))
             {
-                if (!transformFragment.Apply(basePolicyXml))
+                var xmlFileName = Path.Combine(config.PolicyFolder, $"{fragment.Key}.xml");
+
+                var xml = XmlFileHelper.ApplyParametersToXmlFile(
+                    File.ReadAllText(xmlFileName),
+                    fragment.Value);
+
+                var transformFragment = new XmlTransformation(xml, false, null);
+
+                try
+                {
+                    if (!transformFragment.Apply(basePolicyXml))
+                    {
+                        context.AddDiagnostic(new Diagnostic
+                        {
+                            Severity = Diagnostic.Types.Severity.Error,
+                            Summary = $"Failed to apply {fragment.Key} fragment to xml document",
+                            Detail = $"Applied to\r\n\r\n{basePolicyXml.GetFormattedXml()}"
+                        });
+                    }
+                }
+                catch (Exception ex)
                 {
                     context.AddDiagnostic(new Diagnostic
                     {
                         Severity = Diagnostic.Types.Severity.Error,
-                        Summary = $"Failed to apply {fragment.Key} fragment to xml document",
-                        Detail = $"Applied to \r\n\r\n{basePolicyXml.GetFormattedXml()}"
+                        Summary = $"Applying {fragment.Key} fragment to xml document threw an exception",
+                        Detail = $"Applied to\r\n\r\n{basePolicyXml.GetFormattedXml()}\r\n\r\n{ex.Message}\r\n{ex.StackTrace}"
                     });
                 }
             }
-            catch (Exception ex)
-            {
-                context.AddDiagnostic(new Diagnostic
-                {
-                    Severity = Diagnostic.Types.Severity.Error,
-                    Summary = $"Applying {fragment.Key} fragment to xml document threw an exception",
-                    Detail = $"Applied to \r\n\r\n{basePolicyXml.GetFormattedXml()}\r\n\r\n{ex.Message}\r\n{ex.StackTrace}"
-                });
-            }
         }
+
+        var policyXml = basePolicyXml.GetFormattedXml();
+
+        var namedValues = XmlFileHelper.ResolveNamedValuesFromXmlFile(policyXml);
 
         var output = request with
         {
-            Xml = basePolicyXml.GetFormattedXml()
+            UsedNamedValues = namedValues,
+            Xml = policyXml
         };
 
         return Task.FromResult(output);

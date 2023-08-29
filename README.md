@@ -2,6 +2,10 @@
 
 Additions to make cicd for API Management better.
 
+## TODO
+
+- [ ] named values support
+
 ## Xml Merger Terraform Provider
 
 Merges xml policies into bigger files, so xml policies can be composed of fragments,
@@ -17,6 +21,10 @@ without relying on policy fragments.
 `%{A-Z_}:{a-z}`: Name of variable (`EXAMPLE_VARIABLE`) followed by type (`bool|int|string`): (`%EXAMPLE_VARIABLE:bool%`).
 
 Variables will be parsed and added to terraform schema.
+
+### XDT details
+
+Read [this](https://learn.microsoft.com/en-us/previous-versions/aspnet/dd465326(v=vs.110)).
 
 ## OpenApi Merger
 
