@@ -1,6 +1,7 @@
 <?xml version="1.0"?>
 <policies xmlns:xdt="http://schemas.microsoft.com/XML-Document-Transform">
     <inbound>
+        <set-variable name="Value1" value="{{NamedValue1}}" xdt:Transform="Insert" />
         <find-and-replace from="%FROM:string%" to="%TO:int%" xdt:Transform="Insert" />
     </inbound>
 </policies>

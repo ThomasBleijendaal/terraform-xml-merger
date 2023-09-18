@@ -41,8 +41,23 @@ public class OpenApiDataSourceProvider : IDataSourceProvider<OpenApiDataResource
             Components = new()
         };
 
+        var cacheRootLocation = Path.Combine(Directory.GetCurrentDirectory(), ".terraform", "cache");
+
+        Directory.CreateDirectory(cacheRootLocation);
+
         foreach (var functionApp in request.FunctionApps)
         {
+            var cacheFile = Path.Combine(cacheRootLocation, $"{functionApp.Path}.json");
+
+            if (File.Exists(cacheFile) && File.GetLastWriteTime(cacheFile) > DateTime.UtcNow.AddHours(-1))
+            {
+                _logger.LogInformation("Loading swagger from {cacheFile}", cacheFile);
+
+                ProcessOpenApiDocument(rootDocument, cacheFile);
+
+                continue;
+            }
+
             _logger.LogInformation("Starting {functionAppPath}", functionApp.Path);
 
             var functionLocation = Path.Combine(_config.RootFolder, functionApp.Path);
@@ -83,7 +98,11 @@ public class OpenApiDataSourceProvider : IDataSourceProvider<OpenApiDataResource
                 {
                     _logger.LogInformation("Trying {functionAppOpenApiUrl}", functionApp.OpenApiUrl);
 
-                    await ProcessOpenApiDocumentAsync(rootDocument, functionApp.OpenApiUrl);
+                    var json = await _httpClient.GetStringAsync(functionApp.OpenApiUrl);
+
+                    File.WriteAllText(cacheFile, json);
+
+                    ProcessOpenApiDocument(rootDocument, cacheFile);
 
                     break;
                 }

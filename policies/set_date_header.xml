@@ -1,6 +1,7 @@
 <?xml version="1.0"?>
 <policies xmlns:xdt="http://schemas.microsoft.com/XML-Document-Transform">
     <inbound>
+        <set-variable name="Value2" value="{{NamedValue2}}" xdt:Transform="Insert" />
         <set-header name="X-Date" exists-action="override" xdt:Transform="Insert">
             <value>@{ return DateTime.UtcNow.ToString("o"); }</value>
         </set-header>

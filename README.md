@@ -4,7 +4,7 @@ Additions to make cicd for API Management better.
 
 ## TODO
 
-- [ ] named values support
+- [ ] named values support (separate provider that first checks if the named value exists)
 
 ## Xml Merger Terraform Provider
 
