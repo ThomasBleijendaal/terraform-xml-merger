@@ -15,6 +15,12 @@ public record XmlPolicyDataResource
     [Description("Base xml to merge all fragments into")]
     public string? BaseXml { get; set; }
 
+    [Key("policy_name")]
+    [JsonPropertyName("policy_name")]
+    [Description("Logical name for the compiled policy xml")]
+    [Required]
+    public string PolicyName { get; set; } = null!;
+
     [Key("fragments")]
     [JsonPropertyName("fragments")]
     [Description("Fragments to combine")]
@@ -23,9 +29,9 @@ public record XmlPolicyDataResource
 
     [Key("named_values")]
     [JsonPropertyName("named_values")]
-    [Description("List of used named values in the compiled policy xml")]
+    [Description("Used named values in the compiled policy xml, keys are original named value name, the value is the name used in the compiled policy xml")]
     [Computed]
-    public List<string> UsedNamedValues { get; set; } = null!;
+    public Dictionary<string, string> UsedNamedValues { get; set; } = null!;
 
     [Key("xml")]
     [JsonPropertyName("xml")]

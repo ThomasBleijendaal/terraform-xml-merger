@@ -4,14 +4,6 @@ using Moq;
 
 namespace XmlXdt.RequirementTests;
 
-/*
- * TODO:
- * 
- * - insert element behind specific element
- * - 
- * 
- */
-
 public class InsertFirstTest
 {
     [Test]

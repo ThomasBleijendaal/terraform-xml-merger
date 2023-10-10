@@ -45,11 +45,13 @@ public class OpenApiDataSourceProvider : IDataSourceProvider<OpenApiDataResource
 
         Directory.CreateDirectory(cacheRootLocation);
 
+        // TODO: run in parallel with separate ports
+
         foreach (var functionApp in request.FunctionApps)
         {
             var cacheFile = Path.Combine(cacheRootLocation, $"{functionApp.Path}.json");
 
-            if (File.Exists(cacheFile) && File.GetLastWriteTime(cacheFile) > DateTime.UtcNow.AddHours(-1))
+            if (File.Exists(cacheFile) && File.GetLastWriteTime(cacheFile) > DateTime.Now.AddHours(-1))
             {
                 _logger.LogInformation("Loading swagger from {cacheFile}", cacheFile);
 

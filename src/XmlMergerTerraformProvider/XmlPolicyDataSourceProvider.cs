@@ -83,9 +83,20 @@ public class XmlPolicyDataSourceProvider : IDataSourceProvider<XmlPolicyDataReso
 
         var namedValues = XmlFileHelper.ResolveNamedValuesFromXmlFile(policyXml);
 
+        var compiledNamedValues = namedValues
+            .Select(x => x.Split("__")[0])
+            .ToDictionary(x => x, x => $"{x}__{request.PolicyName}");
+
+        foreach (var kv in compiledNamedValues)
+        {
+            policyXml = policyXml.Replace(
+                $$$"""{{{{{kv.Key}}}}}""",
+                $$$"""{{{{{kv.Value}}}}}""");
+        }
+
         var output = request with
         {
-            UsedNamedValues = namedValues,
+            UsedNamedValues = compiledNamedValues,
             Xml = policyXml
         };
 
