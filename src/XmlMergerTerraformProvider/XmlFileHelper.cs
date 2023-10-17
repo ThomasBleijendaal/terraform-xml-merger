@@ -56,10 +56,12 @@ public static partial class XmlFileHelper
         var sb = new StringBuilder();
         var settings = new XmlWriterSettings
         {
+            OmitXmlDeclaration = true,
             Indent = true,
-            IndentChars = "  ",
-            NewLineChars = "\r\n",
-            NewLineHandling = NewLineHandling.Replace
+            IndentChars = "    ",
+            NewLineChars = "\n",
+            NewLineHandling = NewLineHandling.Replace,
+
         };
 
         using var writer = XmlWriter.Create(sb, settings);
@@ -75,6 +77,7 @@ public static partial class XmlFileHelper
             .Matches(policyFile)
             .Select(x => x.Groups.Values.Skip(1).FirstOrDefault()?.Value)
             .OfType<string>()
+            .Distinct()
             .ToList();
     }
 

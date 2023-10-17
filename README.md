@@ -4,7 +4,10 @@ Additions to make cicd for API Management better.
 
 ## TODO
 
-- [ ] named values support (separate provider that first checks if the named value exists)
+- [ ] named values support (separate provider that first checks if the named value exists) -> postfixed named values probably not the best
+- [ ] named values + depends on important for policy deployment -> dynamic postfixed named values will resolve catch-22, so solution has merit
+- [x] white space in policy xml causes changes, which should be avoided
+- [ ] named value deletion is very catch-22
 
 ## Xml Merger Terraform Provider
 

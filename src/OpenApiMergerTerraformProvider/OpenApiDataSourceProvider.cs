@@ -47,91 +47,94 @@ public class OpenApiDataSourceProvider : IDataSourceProvider<OpenApiDataResource
 
         // TODO: run in parallel with separate ports
 
-        foreach (var functionApp in request.FunctionApps)
+        if (request.FunctionApps != null)
         {
-            var cacheFile = Path.Combine(cacheRootLocation, $"{functionApp.Path}.json");
-
-            if (File.Exists(cacheFile) && File.GetLastWriteTime(cacheFile) > DateTime.Now.AddHours(-1))
+            foreach (var functionApp in request.FunctionApps)
             {
-                _logger.LogInformation("Loading swagger from {cacheFile}", cacheFile);
+                var cacheFile = Path.Combine(cacheRootLocation, $"{functionApp.Path}.json");
 
-                ProcessOpenApiDocument(rootDocument, cacheFile);
-
-                continue;
-            }
-
-            _logger.LogInformation("Starting {functionAppPath}", functionApp.Path);
-
-            var functionLocation = Path.Combine(_config.RootFolder, functionApp.Path);
-
-            var localSettings = Path.Combine(functionLocation, "local.settings.json");
-            var localSettingsExample = Path.Combine(functionLocation, !string.IsNullOrWhiteSpace(_config.FunctionSettingsExampleJson)
-                ? _config.FunctionSettingsExampleJson
-                : "local.settings.example.json");
-
-            if (!File.Exists(localSettings) && File.Exists(localSettingsExample))
-            {
-                _logger.LogInformation("Copying {localSettingsExample} to {localSettings}", localSettingsExample, localSettings);
-                File.Copy(localSettingsExample, localSettings);
-            }
-
-            var startInfo = new ProcessStartInfo
-            {
-                Arguments = "start",
-                FileName = !string.IsNullOrWhiteSpace(_config.FunctionCoreTools)
-                    ? _config.FunctionCoreTools
-                    : "C:\\Program Files\\Microsoft\\Azure Functions Core Tools\\func.exe",
-                WorkingDirectory = functionLocation
-            };
-
-            var variables = (functionApp.EnvVariables ?? _emptyEnv)
-                .Union(_config.EnvVariables ?? _emptyEnv)
-                .DistinctBy(x => x.Key)
-                .ToArray();
-
-            startInfo.EnvironmentVariables.AddRange(variables);
-
-            using var process = Process.Start(startInfo);
-
-            var attempts = 0;
-            do
-            {
-                try
+                if (File.Exists(cacheFile) && File.GetLastWriteTime(cacheFile) > DateTime.Now.AddHours(-1))
                 {
-                    _logger.LogInformation("Trying {functionAppOpenApiUrl}", functionApp.OpenApiUrl);
-
-                    var json = await _httpClient.GetStringAsync(functionApp.OpenApiUrl);
-
-                    File.WriteAllText(cacheFile, json);
+                    _logger.LogInformation("Loading swagger from {cacheFile}", cacheFile);
 
                     ProcessOpenApiDocument(rootDocument, cacheFile);
 
-                    break;
+                    continue;
                 }
-                catch (Exception ex)
+
+                _logger.LogInformation("Starting {functionAppPath}", functionApp.Path);
+
+                var functionLocation = Path.Combine(_config.RootFolder, functionApp.Path);
+
+                var localSettings = Path.Combine(functionLocation, "local.settings.json");
+                var localSettingsExample = Path.Combine(functionLocation, !string.IsNullOrWhiteSpace(_config.FunctionSettingsExampleJson)
+                    ? _config.FunctionSettingsExampleJson
+                    : "local.settings.example.json");
+
+                if (!File.Exists(localSettings) && File.Exists(localSettingsExample))
                 {
-                    _logger.LogInformation(ex, "Failed to access {functionAppOpenApiUrl}", functionApp.OpenApiUrl);
+                    _logger.LogInformation("Copying {localSettingsExample} to {localSettings}", localSettingsExample, localSettings);
+                    File.Copy(localSettingsExample, localSettings);
+                }
 
-                    await Task.Delay(_config.RetryDelay ?? 5000);
+                var startInfo = new ProcessStartInfo
+                {
+                    Arguments = "start",
+                    FileName = !string.IsNullOrWhiteSpace(_config.FunctionCoreTools)
+                        ? _config.FunctionCoreTools
+                        : "C:\\Program Files\\Microsoft\\Azure Functions Core Tools\\func.exe",
+                    WorkingDirectory = functionLocation
+                };
 
-                    if (++attempts >= (_config.RetryCount ?? 10))
+                var variables = (functionApp.EnvVariables ?? _emptyEnv)
+                    .Union(_config.EnvVariables ?? _emptyEnv)
+                    .DistinctBy(x => x.Key)
+                    .ToArray();
+
+                startInfo.EnvironmentVariables.AddRange(variables);
+
+                using var process = Process.Start(startInfo);
+
+                var attempts = 0;
+                do
+                {
+                    try
                     {
-                        _logger.LogError(ex, "Completely failed to access {functionAppOpenApiUrl}", functionApp.OpenApiUrl);
+                        _logger.LogInformation("Trying {functionAppOpenApiUrl}", functionApp.OpenApiUrl);
 
-                        context.AddDiagnostic(new Diagnostic
-                        {
-                            Summary = $"Failed to start function in '{functionLocation}'.",
-                            Severity = Diagnostic.Types.Severity.Error,
-                            Detail = $"{ex.Message}\r\n\r\n{ex.StackTrace}"
-                        });
+                        var json = await _httpClient.GetStringAsync(functionApp.OpenApiUrl);
+
+                        File.WriteAllText(cacheFile, json);
+
+                        ProcessOpenApiDocument(rootDocument, cacheFile);
 
                         break;
                     }
-                }
-            }
-            while (true);
+                    catch (Exception ex)
+                    {
+                        _logger.LogInformation(ex, "Failed to access {functionAppOpenApiUrl}", functionApp.OpenApiUrl);
 
-            process?.Kill(entireProcessTree: true);
+                        await Task.Delay(_config.RetryDelay ?? 5000);
+
+                        if (++attempts >= (_config.RetryCount ?? 10))
+                        {
+                            _logger.LogError(ex, "Completely failed to access {functionAppOpenApiUrl}", functionApp.OpenApiUrl);
+
+                            context.AddDiagnostic(new Diagnostic
+                            {
+                                Summary = $"Failed to start function in '{functionLocation}'.",
+                                Severity = Diagnostic.Types.Severity.Error,
+                                Detail = $"{ex.Message}\r\n\r\n{ex.StackTrace}"
+                            });
+
+                            break;
+                        }
+                    }
+                }
+                while (true);
+
+                process?.Kill(entireProcessTree: true);
+            }
         }
 
         if (request.OpenApiUrls != null)

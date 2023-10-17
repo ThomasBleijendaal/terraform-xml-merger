@@ -23,8 +23,7 @@ public record OpenApiDataResource
     [Key("function_apps")]
     [JsonPropertyName("function_apps")]
     [Description("Function Apps")]
-    [Required]
-    public List<FunctionAppDataResource> FunctionApps { get; set; } = new();
+    public List<FunctionAppDataResource>? FunctionApps { get; set; }
 
     [Key("title")]
     [JsonPropertyName("title")]

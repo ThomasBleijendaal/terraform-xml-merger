@@ -24,8 +24,7 @@ public record XmlPolicyDataResource
     [Key("fragments")]
     [JsonPropertyName("fragments")]
     [Description("Fragments to combine")]
-    [Required]
-    public List<Dictionary<string, Dictionary<string, object>>> Fragments { get; set; } = null!;
+    public List<Dictionary<string, Dictionary<string, object>>>? Fragments { get; set; }
 
     [Key("named_values")]
     [JsonPropertyName("named_values")]
